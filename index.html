@@ -9,6 +9,11 @@
     <input type="text" id="input_message" value="">
     <input type="button" onclick="func1()" value="送信">
   </form>
+  <form method="post" enctype="multipart/form-data">
+	画像ファイル<input type="file" name="pic">
+	<br>
+	<input type="submit" name="botan" value="send">
+  </form>
   <div id="output_message"></div>
   <script language="javascript" type="text/javascript">
   function func1() {
