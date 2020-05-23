@@ -1,28 +1,91 @@
-<!DOCTYPE html>
-<html>
-<head>
-  <meta charset="utf-8"/>
-  <title>sample1</title>
-</head>
-<body>
-  <form id="form1" action="#">
-    <input type="text" id="input_message" value="">
-    <input type="button" onclick="func1()" value="送信">
-  </form>
-  <form method="post" enctype="multipart/form-data">
-	画像ファイル<input type="file" name="pic">
-	<br>
-	<input type="submit" name="botan" value="send">
-  </form>
-  <div id="output_message"></div>
-  <script language="javascript" type="text/javascript">
-  function func1() {
-    var input_message = document.getElementById("input_message").value;
-    input_message = "入力された内容は「" + input_message + "」です。";
-    console.log("cons output testtttt");
-    document.getElementById("output_message").innerHTML = input_message;
-  }
-  </script>
-  <input type="submit" value="購入する" onClick="alert('購入しました！');">
-</body>
-</html>
+<template>
+  <div>
+    <div>
+      <canvas
+        ref="canvas"
+        class="canvas"
+        :width="size.width"
+        :height="size.height"
+        @mousedown="handleMouseDown"
+        @mouseup="handleMouseUp"
+        @mousemove="handleMouseMove"
+      ></canvas>
+    </div>
+    <a class="button" @click="clear">clear</a>
+  </div>
+</template>
+
+<style scoped>
+.canvas {
+  background-color: #000; /*黒背景*/
+}
+</style>
+
+<script>
+export default {
+  data() {
+    return {
+      size: {
+        width: 400,
+        height: 400,
+      },
+      mouse: {
+        x: 0,
+        y: 0,
+        down: false,
+      },
+    };
+  },
+  computed: {
+    currentMouse() {
+      const c = this.$refs.canvas;
+      const rect = c.getBoundingClientRect();
+
+      return {
+        x: this.mouse.x - rect.left,
+        y: this.mouse.y - rect.top,
+      };
+    },
+  },
+  mounted() {
+    this.clear();
+  },
+  methods: {
+    draw() {
+      if (this.mouse.down) {
+        const ctx = this.$refs.canvas.getContext('2d');
+        ctx.lineTo(this.currentMouse.x, this.currentMouse.y);
+        ctx.strokeStyle = '#fff'; // 白文字
+        ctx.lineWidth = 20;
+        ctx.stroke();
+      }
+    },
+    handleMouseDown(event) {
+      this.mouse = {
+        x: event.pageX,
+        y: event.pageY,
+        down: true,
+      };
+
+      const ctx = this.$refs.canvas.getContext('2d');
+      ctx.moveTo(this.currentMouse.x, this.currentMouse.y);
+    },
+    handleMouseUp() {
+      this.mouse.down = false;
+    },
+    handleMouseMove(event) {
+      Object.assign(this.mouse, {
+        x: event.pageX,
+        y: event.pageY,
+      });
+
+      this.draw();
+    },
+    clear() {
+      const ctx = this.$refs.canvas.getContext('2d');
+      ctx.clearRect(0, 0, this.size.width, this.size.height);
+      ctx.beginPath();
+    },
+  },
+};
+</script>
