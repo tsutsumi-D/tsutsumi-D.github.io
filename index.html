@@ -1,12 +1,21 @@
 <!DOCTYPE html>
 <html>
 <head>
-<title>サンプル</title>
+  <meta charset="utf-8"/>
+  <title>sample1</title>
 </head>
 <body>
-<script>
-dd = new Date();
-document.write(dd.toLocaleString());
-</script>
+  <form id="form1" action="#">
+    <input type="text" id="input_message" value="">
+    <input type="button" onclick="func1()" value="送信">
+  </form>
+  <div id="output_message"></div>
+  <script language="javascript" type="text/javascript">
+  function func1() {
+    var input_message = document.getElementById("input_message").value;
+    input_message = "入力された内容は「" + input_message + "」です。";
+    document.getElementById("output_message").innerHTML = input_message;
+  }
+  </script>
 </body>
 </html>
