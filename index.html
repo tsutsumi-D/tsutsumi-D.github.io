@@ -1,91 +1,82 @@
-<template>
-  <div>
-    <div>
-      <canvas
-        ref="canvas"
-        class="canvas"
-        :width="size.width"
-        :height="size.height"
-        @mousedown="handleMouseDown"
-        @mouseup="handleMouseUp"
-        @mousemove="handleMouseMove"
-      ></canvas>
-    </div>
-    <a class="button" @click="clear">clear</a>
-  </div>
-</template>
+<!DOCTYPE html>
+<html lang="ja">
+  <head>
+    <meta charset="UTF-8" />
+    <title>script要素のサンプル・ドキュメント</title>
+  </head>
+  <body>
+    <span>script要素のサンプル</span>
+    <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs@0.8.0"></script>
 
-<style scoped>
-.canvas {
-  background-color: #000; /*黒背景*/
-}
-</style>
+<!-- ファイルのアップロード -->
+<input type="file" id="example" multiple>
+<!-- 👇ここにプレビュー画像を追加する -->
+<div id="preview"></div>
 
 <script>
-export default {
-  data() {
-    return {
-      size: {
-        width: 400,
-        height: 400,
-      },
-      mouse: {
-        x: 0,
-        y: 0,
-        down: false,
-      },
-    };
-  },
-  computed: {
-    currentMouse() {
-      const c = this.$refs.canvas;
-      const rect = c.getBoundingClientRect();
+function previewFile(file) {
+  // プレビュー画像を追加する要素
+  const preview = document.getElementById('preview');
 
-      return {
-        x: this.mouse.x - rect.left,
-        y: this.mouse.y - rect.top,
-      };
-    },
-  },
-  mounted() {
-    this.clear();
-  },
-  methods: {
-    draw() {
-      if (this.mouse.down) {
-        const ctx = this.$refs.canvas.getContext('2d');
-        ctx.lineTo(this.currentMouse.x, this.currentMouse.y);
-        ctx.strokeStyle = '#fff'; // 白文字
-        ctx.lineWidth = 20;
-        ctx.stroke();
-      }
-    },
-    handleMouseDown(event) {
-      this.mouse = {
-        x: event.pageX,
-        y: event.pageY,
-        down: true,
-      };
+  // FileReaderオブジェクトを作成
+  const reader = new FileReader();
 
-      const ctx = this.$refs.canvas.getContext('2d');
-      ctx.moveTo(this.currentMouse.x, this.currentMouse.y);
-    },
-    handleMouseUp() {
-      this.mouse.down = false;
-    },
-    handleMouseMove(event) {
-      Object.assign(this.mouse, {
-        x: event.pageX,
-        y: event.pageY,
-      });
+  // URLとして読み込まれたときに実行する処理
+  reader.onload = function (e) {
+    const imageUrl = e.target.result; // URLはevent.target.resultで呼び出せる
+    const img = document.createElement("img"); // img要素を作成
+    img.src = imageUrl; // URLをimg要素にセット
+    preview.appendChild(img); // #previewの中に追加
+  }
 
-      this.draw();
-    },
-    clear() {
-      const ctx = this.$refs.canvas.getContext('2d');
-      ctx.clearRect(0, 0, this.size.width, this.size.height);
-      ctx.beginPath();
-    },
-  },
-};
+  // いざファイルをURLとして読み込む
+  reader.readAsDataURL(file);
+}
+const fileInput = document.getElementById('example');
+const handleFileSelect = () => {
+  const files = fileInput.files;
+  for (let i = 0; i < files.length; i++) {
+    previewFile(files[i]);
+  }
+}
+fileInput.addEventListener('change', handleFileSelect);
 </script>
+
+
+
+
+<!-- Load TensorFlow.js 
+****************************************************************
+****************************************************************
+****************************************************************
+<script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs@0.13.0"></script>
+<script>// <![CDATA[
+async function main(){
+  alert("aaaa")
+  const model = await tf.loadModel('model/model.json');
+   //画像オブジェクトを生成
+   var width = 28;
+   var height = 28;
+   var img = new Image();
+   img.src = 'images/001.png';
+   var canvas = document.createElement("canvas");
+     canvas.setAttribute("width", width);
+     canvas.setAttribute("height", height);
+     var context = canvas.getContext("2d");
+     context.drawImage(img, 0, 0, width, height);
+     var imageData = context.getImageData(0, 0, width, height);
+     const example = tf.fromPixels(imageData, 1).reshape([1,28,28]);
+   const prediction = model.predict(example);
+   $("#result").text("この画像の数字は「" + prediction.argMax(-1).dataSync() + "」だよ！");
+}
+main();
+// ]]></script>
+****************************************************************
+****************************************************************
+****************************************************************
+-->
+
+
+
+  </body>
+</html>
