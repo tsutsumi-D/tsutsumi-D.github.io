@@ -50,15 +50,15 @@ fileInput.addEventListener('change', handleFileSelect);
 <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs@0.13.0"></script>
 <script>// <![CDATA[
 async function main(){
-  alert("======111111=======")
-  //https://tsutsumi-d.github.io/
-  const model = await tf.loadLayersModel('https://tsutsumi-d.github.io/model/model.json');
-  alert("======URL OK=======")
+  alert("======main() START=======")
+  const serverPATH = 'https://tsutsumi-d.github.io/';
+  //const serverPATH = 'http://127.0.0.1:8887/';
+  const model = await tf.loadLayersModel(serverPATH + 'model/model.json');
    //画像オブジェクトを生成
    var width = 28;
    var height = 28;
    var img = new Image();
-   img.src = 'https://tsutsumi-d.github.io/images/004.png';
+   img.src = serverPATH + 'images/004.png';
    var canvas = document.createElement("canvas");
      canvas.setAttribute("width", width);
      canvas.setAttribute("height", height);
@@ -66,7 +66,6 @@ async function main(){
      context.drawImage(img, 0, 0, width, height);
      var imageData = context.getImageData(0, 0, width, height);
      const example = tf.fromPixels(imageData, 1).reshape([1,28,28,1]);
-   alert("======222222=======")
    const prediction = model.predict(example);
    alert("======333333=======")
    alert(prediction)
