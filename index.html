@@ -6,7 +6,7 @@
   </head>
   <body>
     <span>script要素のサンプル</span>
-    <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs@0.8.0"></script>
+<!--    <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs@0.8.0"></script> -->
 
 <!-- ファイルのアップロード -->
 <input type="file" id="example" multiple>
@@ -45,36 +45,33 @@ fileInput.addEventListener('change', handleFileSelect);
 
 
 
-<!-- Load TensorFlow.js 
-****************************************************************
-****************************************************************
-****************************************************************
+<!-- Load TensorFlow.js -->
+<script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs@1.0.0/dist/tf.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs@0.13.0"></script>
 <script>// <![CDATA[
 async function main(){
-  alert("aaaa")
-  const model = await tf.loadModel('model/model.json');
+  alert("======111111=======")
+  const model = await tf.loadLayersModel('http://127.0.0.1:8887/model/model.json');
    //画像オブジェクトを生成
    var width = 28;
    var height = 28;
    var img = new Image();
-   img.src = 'images/001.png';
+   img.src = 'http://127.0.0.1:8887/images/004.png';
    var canvas = document.createElement("canvas");
      canvas.setAttribute("width", width);
      canvas.setAttribute("height", height);
      var context = canvas.getContext("2d");
      context.drawImage(img, 0, 0, width, height);
      var imageData = context.getImageData(0, 0, width, height);
-     const example = tf.fromPixels(imageData, 1).reshape([1,28,28]);
+     const example = tf.fromPixels(imageData, 1).reshape([1,28,28,1]);
+   alert("======222222=======")
    const prediction = model.predict(example);
-   $("#result").text("この画像の数字は「" + prediction.argMax(-1).dataSync() + "」だよ！");
+   alert("======333333=======")
+   alert(prediction)
+   //$("#result").text("この画像の数字は「" + prediction.argMax(-1).dataSync() + "」だよ！");
 }
 main();
 // ]]></script>
-****************************************************************
-****************************************************************
-****************************************************************
--->
 
 
 
