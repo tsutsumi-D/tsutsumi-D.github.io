@@ -51,12 +51,14 @@ fileInput.addEventListener('change', handleFileSelect);
 <script>// <![CDATA[
 async function main(){
   alert("======111111=======")
-  const model = await tf.loadLayersModel('http://127.0.0.1:8887/model/model.json');
+  //https://tsutsumi-d.github.io/
+  const model = await tf.loadLayersModel('https://tsutsumi-d.github.io/model/model.json');
+  alert("======URL OK=======")
    //画像オブジェクトを生成
    var width = 28;
    var height = 28;
    var img = new Image();
-   img.src = 'http://127.0.0.1:8887/images/004.png';
+   img.src = 'https://tsutsumi-d.github.io/images/004.png';
    var canvas = document.createElement("canvas");
      canvas.setAttribute("width", width);
      canvas.setAttribute("height", height);
