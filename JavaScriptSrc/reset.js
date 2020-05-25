@@ -43,7 +43,8 @@ async function main(){
 		const example = tf.fromPixels(imageData, 1).reshape([1,28,28,1]);
 	const prediction = model.predict(example);
 	//予測結果アラート
-	alert(prediction)
-	alert(prediction.argMax(-1).dataSync())
+	//alert(prediction)
+	alert("このが画像の数字は")
+	alert(prediction.argMax(-1))
 	//$("#result").text("この画像の数字は「" + prediction.argMax(-1).dataSync() + "」だよ！");
 }

@@ -6,6 +6,8 @@
   </head>
   <body>
     <span>canvasに描画した数字をAIが判別<br></span>
+    <span>↓の黒いエリアに数字を描いて下さい<br></span>
+
 
     <!-- canvas 描画エリアの作成 -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/signature_pad/1.5.3/signature_pad.min.js"></script>
@@ -22,13 +24,10 @@
     <br>
 
     <!-- 描画された画像を入力にして、予測を行うボタン -->
-    <a id="predict-button" class="button is-link is-loading" onclick="main();">Prediction</a>
+    <button type="button" name="name" value="value" onclick="main();">予測開始</button>
     <!-- canvas 描画エリアをリセット -->
-    <a class="button" onclick="reset()">Reset</a>
     <script type="text/javascript" src="JavaScriptSrc/reset.js"></script>
-
-
-
+    <button type="button" name="name" value="value" onclick="reset();">描画領域のリセット</button>
 
 <!-- Load TensorFlow.js -->
 <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs@1.0.0/dist/tf.min.js"></script>
