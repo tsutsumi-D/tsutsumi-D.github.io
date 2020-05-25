@@ -35,7 +35,7 @@ function main(){
 	//仕方ないから余分な処理
 	//同じことを繰り返し、modelが読み込まれて、正確な予測ができてるであろう最後のループ処理で予測
 	//何回やればmodel読み込んでくれる？//5回くらいかね？
-	var repetition = 5;
+	var repetition = 10;
 	for (var i = 0; i <= repetition; i++) {
 		predict(i, repetition)
 	}
