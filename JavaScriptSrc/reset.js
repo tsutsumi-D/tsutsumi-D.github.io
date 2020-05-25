@@ -22,9 +22,28 @@ function Canvas2imgSrc(){
 	return dataURI;
 }
 
+function sleep(waitMsec) {
+  var startMsec = new Date();
+ 
+  // 指定ミリ秒間だけループさせる（CPUは常にビジー状態）
+  while (new Date() - startMsec < waitMsec);
+}
+
+function main(){
+	//なぜか非同期じゃないとmodelが読み込めない
+	//読み込むまで予測できない
+	//仕方ないから余分な処理
+	//同じことを繰り返し、modelが読み込まれて、正確な予測ができてるであろう最後のループ処理で予測
+	//何回やればmodel読み込んでくれる？//5回くらいかね？
+	var repetition = 5;
+	for (var i = 0; i <= repetition; i++) {
+		predict(i, repetition)
+	}
+}
+
 //予測を行う
-async function main(){
-	alert("======predict START=======")
+async function predict(num, repetition){
+	//alert("======predict START=======")
 	const serverPATH = 'https://tsutsumi-d.github.io/';
 	//const serverPATH = 'http://127.0.0.1:8887/';
 	const model = await tf.loadLayersModel(serverPATH + 'model/model.json');
@@ -40,11 +59,17 @@ async function main(){
 		var context = canvas.getContext("2d");
 		context.drawImage(img, 0, 0, width, height);
 		var imageData = context.getImageData(0, 0, width, height);
-		const example = tf.fromPixels(imageData, 1).reshape([1,28,28,1]);
+		const example = tf.fromPixels(imageData, 1).reshape([-1,28,28,1]);
 	const prediction = model.predict(example);
 	//予測結果アラート
 	//alert(prediction)
-	alert("このが画像の数字は")
-	alert(prediction.argMax(-1))
+	//alert("このが画像の数字は")
+	//alert(prediction.argMax(-1))
+	//alert(prediction.argMax(-1).dataSync())
 	//$("#result").text("この画像の数字は「" + prediction.argMax(-1).dataSync() + "」だよ！");
+
+	if (num == repetition) {
+		alert(prediction.argMax(-1).dataSync())
+	}
+
 }
