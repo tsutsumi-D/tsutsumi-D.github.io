@@ -5,119 +5,27 @@
     <title>script要素のサンプル・ドキュメント</title>
   </head>
   <body>
-    <span>script要素のサンプル</span>
+    <span>canvasに描画した数字をAIが判別<br></span>
 
-<script src="https://cdnjs.cloudflare.com/ajax/libs/signature_pad/1.5.3/signature_pad.min.js"></script>
-<canvas id="draw-area" width="280" height="280" style="border: 2px solid;"></canvas>
-<script>
-  alert('====canvas make=====')
-  // init SignaturePad
-  const drawElement = document.getElementById('draw-area');
-  const signaturePad = new SignaturePad(drawElement, {
-      minWidth: 6,
-      maxWidth: 6,
-      penColor: 'white',
-      backgroundColor: 'black',
-  });
-  alert('====canvas make FINISH=====')
-</script>
+    <!-- canvas 描画エリアの作成 -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/signature_pad/1.5.3/signature_pad.min.js"></script>
+    <canvas id="draw-area" width="280" height="280" style="border: 2px solid;"></canvas>
+    <script>
+      const drawElement = document.getElementById('draw-area');
+      const signaturePad = new SignaturePad(drawElement, {
+          minWidth: 6,
+          maxWidth: 6,
+          penColor: 'white',
+          backgroundColor: 'black',
+      });
+    </script>
+    <br>
 
-
-
-
-
-
-
-<a id="predict-button" class="button is-link is-loading" onclick="main();">Prediction</a>
-<a class="button" onclick="reset()">Reset</a>
-
-<script>
-function getImageData() {
-    const inputWidth = inputHeight = 28;
-    // resize
-    const tmpCanvas = document.createElement('canvas').getContext('2d');
-    tmpCanvas.drawImage(drawElement, 0, 0, inputWidth, inputHeight);
-    // convert grayscale
-    let imageData = tmpCanvas.getImageData(0, 0, inputWidth, inputHeight);
-    for (let i = 0; i < imageData.data.length; i+=4) {
-        const avg = (imageData.data[i] + imageData.data[i+1] + imageData.data[i+2]) / 3;
-        imageData.data[i] = imageData.data[i+1] = imageData.data[i+2] = avg;
-    }
-    return imageData;
-}
-  function reset() {
-      signaturePad.clear();
-      let elements = document.querySelectorAll(".accuracy");
-      elements.forEach(el => {
-          el.parentNode.classList.remove('is-selected');
-          el.innerText = '-';
-      })
-  }
-
-
-function DrowAndShow(){
-    alert('canvas save')
-
-  // キャンパス要素を取得 (既に描画されている)
-  var ccccc = document.getElementById("draw-area");
-    alert('canvas save FINISH')
-  // 描画内容をデータURIに変換する (引数なしだとPNG)
-  var dataURI = ccccc.toDataURL("png");
-  // img要素を取得
-  var image = document.getElementById("output");
-  // データURIは直接img要素のsrc属性に指定できる
-  image.src = dataURI;
-
-    const preview = document.getElementById('preview');
-    const img = document.createElement("img"); // img要素を作成
-    img.src = dataURI; // URLをimg要素にセット
-    preview.appendChild(img); // #previewの中に追加
-}
-</script>
-
-<a class="button" onclick="DrowAndShow()">DrowAndShow</a>
-<img id="output" src="">
-
-
-
-
-
-<!-- ファイルのアップロード -->
-<input type="file" id="example" multiple>
-<!-- 👇ここにプレビュー画像を追加する -->
-<div id="preview"></div>
-
-<script>
-function previewFile(file) {
-  // プレビュー画像を追加する要素
-  const preview = document.getElementById('preview');
-
-  // FileReaderオブジェクトを作成
-  const reader = new FileReader();
-
-  // URLとして読み込まれたときに実行する処理
-  reader.onload = function (e) {
-    const imageUrl = e.target.result; // URLはevent.target.resultで呼び出せる
-    const img = document.createElement("img"); // img要素を作成
-    img.src = imageUrl; // URLをimg要素にセット
-    preview.appendChild(img); // #previewの中に追加
-  }
-
-  // いざファイルをURLとして読み込む
-  reader.readAsDataURL(file);
-}
-const fileInput = document.getElementById('example');
-const handleFileSelect = () => {
-  const files = fileInput.files;
-  for (let i = 0; i < files.length; i++) {
-    previewFile(files[i]);
-  }
-}
-fileInput.addEventListener('change', handleFileSelect);
-</script>
-
-
-
+    <!-- 描画された画像を入力にして、予測を行うボタン -->
+    <a id="predict-button" class="button is-link is-loading" onclick="main();">Prediction</a>
+    <!-- canvas 描画エリアをリセット -->
+    <a class="button" onclick="reset()">Reset</a>
+    <script type="text/javascript" src="JavaScriptSrc/reset.js"></script>
 
 
 
@@ -125,30 +33,7 @@ fileInput.addEventListener('change', handleFileSelect);
 <!-- Load TensorFlow.js -->
 <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs@1.0.0/dist/tf.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs@0.13.0"></script>
-<script>// <![CDATA[
-async function main(){
-  alert("======main() START=======")
-  const serverPATH = 'https://tsutsumi-d.github.io/';
-  //const serverPATH = 'http://127.0.0.1:8887/';
-  const model = await tf.loadLayersModel(serverPATH + 'model/model.json');
-   //画像オブジェクトを生成
-   var width = 28;
-   var height = 28;
-   var img = new Image();
-   img.src = serverPATH + 'images/004.png';
-   var canvas = document.createElement("canvas");
-     canvas.setAttribute("width", width);
-     canvas.setAttribute("height", height);
-     var context = canvas.getContext("2d");
-     context.drawImage(img, 0, 0, width, height);
-     var imageData = context.getImageData(0, 0, width, height);
-     const example = tf.fromPixels(imageData, 1).reshape([1,28,28,1]);
-   const prediction = model.predict(example);
-   alert("======333333=======")
-   alert(prediction)
-   //$("#result").text("この画像の数字は「" + prediction.argMax(-1).dataSync() + "」だよ！");
-}
-// ]]></script>
+
 
 
 
