@@ -51,7 +51,7 @@ async function predict(){
 	var height = 28;
 	var img = new Image();
 	//img.src = serverPATH + 'images/004.png';
-	img.src = Canvas2imgSrc();
+	img.src = await Canvas2imgSrc();
 	var canvas = document.createElement("canvas");
 		canvas.setAttribute("width", width);
 		canvas.setAttribute("height", height);
