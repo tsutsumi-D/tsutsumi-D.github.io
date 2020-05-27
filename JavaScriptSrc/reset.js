@@ -36,15 +36,15 @@ function LoadImage(){
 	var height = 28;
 	var img = new Image();
 	//img.src = serverPATH + 'images/004.png';
-	img.src = await Canvas2imgSrc();
-	var canvas = await document.createElement("canvas");
-		await canvas.setAttribute("width", width);
-		await canvas.setAttribute("height", height);
-	var context = await canvas.getContext("2d"); //ここにawaitがあれば
-		await context.drawImage(img, 0, 0, width, height);
-	var imageData = await context.getImageData(0, 0, width, height);
+	img.src = Canvas2imgSrc()
+	var canvas = document.createElement("canvas");
+		canvas.setAttribute("width", width);
+		canvas.setAttribute("height", height);
+	var context = canvas.getContext("2d"); //ここにawaitがあれば
+		context.drawImage(img, 0, 0, width, height);
+	var imageData = context.getImageData(0, 0, width, height);
 	//const example = tf.fromPixels(imageData, 1).reshape([-1,28,28,1]);
-	const example = await tf.browser.fromPixels(imageData, 1).reshape([-1,28,28,1]);
+	const example = tf.browser.fromPixels(imageData, 1).reshape([-1,28,28,1]);
 }
 
 async function predict(){
@@ -60,7 +60,7 @@ async function predict(){
 	 */
 
 	//画像を読み込み
-	LoadImage();
+	await LoadImage();
 	//github pages のパス
 	const serverPATH = 'https://tsutsumi-d.github.io/';
 	//const serverPATH = 'http://127.0.0.1:8887/';
