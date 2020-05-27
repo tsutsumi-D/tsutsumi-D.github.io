@@ -60,7 +60,7 @@ async function predict(){
 	 */
 
 	//画像を読み込み
-	await LoadImage();
+	LoadImage();
 	//github pages のパス
 	const serverPATH = 'https://tsutsumi-d.github.io/';
 	//const serverPATH = 'http://127.0.0.1:8887/';
