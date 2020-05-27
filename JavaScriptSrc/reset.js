@@ -60,7 +60,7 @@ async function predict(){
 	var imageData = await context.getImageData(0, 0, width, height);
 	//const example = tf.fromPixels(imageData, 1).reshape([-1,28,28,1]);
 	const example = await tf.browser.fromPixels(imageData, 1).reshape([-1,28,28,1]);
-	const prediction = model.predict(example);
+	const prediction = await model.predict(example);
 	
 	//debugコンソール出力
 	//console.log(prediction)
@@ -72,8 +72,8 @@ async function predict(){
 
     //予測結果を文字列にする
     const result = await prediction.argMax(-1).dataSync().join(',')
-	add("AIはこの数字を" + result + "と判断しました")
-	alert("AIはこの数字を" + result + "と判断しました")
+	await add("AIはこの数字を" + result + "と判断しました")
+	await alert("AIはこの数字を" + result + "と判断しました")
 }
 
 
