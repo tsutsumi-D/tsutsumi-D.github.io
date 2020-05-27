@@ -53,8 +53,8 @@ async function predict(){
 	//img.src = serverPATH + 'images/004.png';
 	img.src = await Canvas2imgSrc();
 	var canvas = await document.createElement("canvas");
-		canvas.setAttribute("width", width);
-		canvas.setAttribute("height", height);
+		await canvas.setAttribute("width", width);
+		await canvas.setAttribute("height", height);
 	var context = await canvas.getContext("2d"); //ここにawaitがあれば
 		await context.drawImage(img, 0, 0, width, height);
 	var imageData = await context.getImageData(0, 0, width, height);
