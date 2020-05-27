@@ -52,10 +52,10 @@ async function predict(){
 	var img = new Image();
 	//img.src = serverPATH + 'images/004.png';
 	img.src = await Canvas2imgSrc();
-	var canvas = document.createElement("canvas");
+	var canvas = await document.createElement("canvas");
 		canvas.setAttribute("width", width);
 		canvas.setAttribute("height", height);
-	var context = await canvas.getContext("2d");
+	var context = await canvas.getContext("2d"); //ここにawaitがあれば
 		context.drawImage(img, 0, 0, width, height);
 	var imageData = await context.getImageData(0, 0, width, height);
 	//const example = tf.fromPixels(imageData, 1).reshape([-1,28,28,1]);
