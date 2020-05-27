@@ -3,12 +3,19 @@
   <head>
     <meta charset="UTF-8" />
     <title>script要素のサンプル・ドキュメント</title>
+    <!-- tensorFlow.js インポート -->
+    <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs/dist/tf.min.js"></script>
+    <!-- 最新版のtensorFlow.jsがインポートできてるはず。これも警告がでる -->
+    <!-- <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs@latest"></script> -->
+    <!-- 最初はこの2つをインポートして使ってた。エラーは出ないがバージョン違いの2つをインポートするため警告がめっちゃ出る。よって最新版をインポートすることにした。-->
+    <!--
+    <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs@1.0.0/dist/tf.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs@0.13.0"></script>
+    -->
   </head>
   <body>
     <span>canvasに描画した数字をAIが判別<br></span>
     <span>↓の黒いエリアに数字を描いて下さい<br></span>
-    <span>charange 100 loop<br></span>
-
 
     <!-- canvas 描画エリアの作成 -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/signature_pad/1.5.3/signature_pad.min.js"></script>
@@ -25,21 +32,13 @@
     <br>
 
     <!-- 描画された画像を入力にして、予測を行うボタン -->
-    <!--  <script>
-      const serverPATH = 'https://tsutsumi-d.github.io/';
-      const model = tf.loadLayersModel(serverPATH + 'model/model.json');
-    </script> -->
-    <button type="button" name="name" value="value" onclick="main();">予測開始</button>
+    <button type="button" name="name" value="value" onclick="predict();">予測開始</button>
     <!-- canvas 描画エリアをリセット -->
     <script type="text/javascript" src="JavaScriptSrc/reset.js"></script>
     <button type="button" name="name" value="value" onclick="reset();">描画領域のリセット</button>
 
-<!-- Load TensorFlow.js -->
-<script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs@1.0.0/dist/tf.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs@0.13.0"></script>
-
-
-
+    <!-- 結果表示エリア -->
+    <div id="predictResult"><br></div>
 
   </body>
 </html>

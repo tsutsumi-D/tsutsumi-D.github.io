@@ -22,28 +22,27 @@ function Canvas2imgSrc(){
 	return dataURI;
 }
 
+//処理を一時停止させる関数
 function sleep(waitMsec) {
   var startMsec = new Date();
- 
   // 指定ミリ秒間だけループさせる（CPUは常にビジー状態）
   while (new Date() - startMsec < waitMsec);
 }
 
-function main(){
-	//なぜか非同期じゃないとmodelが読み込めない
-	//読み込むまで予測できない
-	//仕方ないから余分な処理
-	//同じことを繰り返し、modelが読み込まれて、正確な予測ができてるであろう最後のループ処理で予測
-	//何回やればmodel読み込んでくれる？//5回くらいかね？
-	var repetition = 100;
-	for (var i = 0; i <= repetition; i++) {
-		predict(i, repetition)
-	}
-}
 
-//予測を行う
-async function predict(num, repetition){
-	//alert("======predict START=======")
+async function predict(){
+	/*
+	 * canvas より描画画像を読み込む
+	 * 読み込んだ画像を適切な形式に変換
+	 * 変換された画像を入力に予測
+	 *
+	 * awaitはここだけつけてた
+	 * const model = await tf.loadLayersModel(serverPATH + 'model/model.json');
+	 * しかしこれだと画像の読み込みが追いつかない。よって他もawait
+	 *
+	 */
+
+	//github pages のパス
 	const serverPATH = 'https://tsutsumi-d.github.io/';
 	//const serverPATH = 'http://127.0.0.1:8887/';
 	const model = await tf.loadLayersModel(serverPATH + 'model/model.json');
@@ -52,24 +51,42 @@ async function predict(num, repetition){
 	var height = 28;
 	var img = new Image();
 	//img.src = serverPATH + 'images/004.png';
-	img.src = Canvas2imgSrc();
-	var canvas = document.createElement("canvas");
-		canvas.setAttribute("width", width);
-		canvas.setAttribute("height", height);
-		var context = canvas.getContext("2d");
-		context.drawImage(img, 0, 0, width, height);
-		var imageData = context.getImageData(0, 0, width, height);
-		const example = tf.fromPixels(imageData, 1).reshape([-1,28,28,1]);
-	const prediction = model.predict(example);
-	//予測結果アラート
-	//alert(prediction)
-	//alert("このが画像の数字は")
-	//alert(prediction.argMax(-1))
-	//alert(prediction.argMax(-1).dataSync())
-	//$("#result").text("この画像の数字は「" + prediction.argMax(-1).dataSync() + "」だよ！");
+	img.src = await Canvas2imgSrc();
+	var canvas = await document.createElement("canvas");
+		await canvas.setAttribute("width", width);
+		await canvas.setAttribute("height", height);
+	var context = await canvas.getContext("2d");
+		await context.drawImage(img, 0, 0, width, height);
+	var imageData = await context.getImageData(0, 0, width, height);
+	//const example = tf.fromPixels(imageData, 1).reshape([-1,28,28,1]);
+	const example = await tf.browser.fromPixels(imageData, 1).reshape([-1,28,28,1]);
+	const prediction = await model.predict(example);
+	
+	//debugコンソール出力
+	//console.log(prediction)
+	//console.log("このが画像の数字は")
+	//console.log(prediction.argMax(-1))
+	//console.log(prediction.argMax(-1).dataSync())
+    //console.log(example)
+    //console.log(prediction)
 
-	if (num == repetition) {
-		alert(prediction.argMax(-1).dataSync())
-	}
-
+    //予測結果を文字列にする
+    const result = await prediction.argMax(-1).dataSync().join(',')
+	add("AIはこの数字を" + result + "と判断しました")
+	alert("AIはこの数字を" + result + "と判断しました")
 }
+
+
+function add(addText){
+	const div1 = document.getElementById("predictResult");
+	// 要素の追加
+	const p1 = document.createElement("div");
+	const text1 = document.createTextNode(addText);
+	p1.appendChild(text1);
+	div1.appendChild(p1);
+}
+
+
+
+
+
