@@ -30,6 +30,23 @@ function sleep(waitMsec) {
 }
 
 
+function LoadImage(){
+	//画像オブジェクトを生成
+	var width = 28;
+	var height = 28;
+	var img = new Image();
+	//img.src = serverPATH + 'images/004.png';
+	img.src = await Canvas2imgSrc();
+	var canvas = await document.createElement("canvas");
+		await canvas.setAttribute("width", width);
+		await canvas.setAttribute("height", height);
+	var context = await canvas.getContext("2d"); //ここにawaitがあれば
+		await context.drawImage(img, 0, 0, width, height);
+	var imageData = await context.getImageData(0, 0, width, height);
+	//const example = tf.fromPixels(imageData, 1).reshape([-1,28,28,1]);
+	const example = await tf.browser.fromPixels(imageData, 1).reshape([-1,28,28,1]);
+}
+
 async function predict(){
 	/*
 	 * canvas より描画画像を読み込む
@@ -42,6 +59,8 @@ async function predict(){
 	 *
 	 */
 
+	//画像を読み込み
+	await LoadImage();
 	//github pages のパス
 	const serverPATH = 'https://tsutsumi-d.github.io/';
 	//const serverPATH = 'http://127.0.0.1:8887/';
