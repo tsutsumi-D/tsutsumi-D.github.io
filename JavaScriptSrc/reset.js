@@ -56,7 +56,7 @@ async function predict(){
 		canvas.setAttribute("width", width);
 		canvas.setAttribute("height", height);
 	var context = await canvas.getContext("2d"); //ここにawaitがあれば
-		context.drawImage(img, 0, 0, width, height);
+		await context.drawImage(img, 0, 0, width, height);
 	var imageData = await context.getImageData(0, 0, width, height);
 	//const example = tf.fromPixels(imageData, 1).reshape([-1,28,28,1]);
 	const example = await tf.browser.fromPixels(imageData, 1).reshape([-1,28,28,1]);
