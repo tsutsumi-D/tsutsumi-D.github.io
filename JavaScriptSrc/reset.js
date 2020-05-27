@@ -70,16 +70,16 @@ async function predict(){
 	var height = 28;
 	var img = new Image();
 	//img.src = serverPATH + 'images/004.png';
-	img.src = await Canvas2imgSrc();
+	img.src = Canvas2imgSrc();
 	var canvas = await document.createElement("canvas");
-		await canvas.setAttribute("width", width);
-		await canvas.setAttribute("height", height);
+		canvas.setAttribute("width", width);
+		canvas.setAttribute("height", height);
 	var context = await canvas.getContext("2d"); //ここにawaitがあれば
-		await context.drawImage(img, 0, 0, width, height);
-	var imageData = await context.getImageData(0, 0, width, height);
+		context.drawImage(img, 0, 0, width, height);
+	var imageData = context.getImageData(0, 0, width, height);
 	//const example = tf.fromPixels(imageData, 1).reshape([-1,28,28,1]);
-	const example = await tf.browser.fromPixels(imageData, 1).reshape([-1,28,28,1]);
-	const prediction = await model.predict(example);
+	const example = tf.browser.fromPixels(imageData, 1).reshape([-1,28,28,1]);
+	const prediction = model.predict(example);
 	
 	//debugコンソール出力
 	//console.log(prediction)
